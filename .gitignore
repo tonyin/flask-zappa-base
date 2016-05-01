@@ -64,4 +64,4 @@ target/
 # custom
 venv
 .idea
-instance/
+instance/config.py
