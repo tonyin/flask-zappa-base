@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
+
+{% block page_title %}Account | {% endblock %}
+{% block nav %}{% include '_navbar.html' %}{% endblock %}
+
+{% set endpoints = [
+  ('account.manage', 'Profile'),
+  ('account.change_email_request', 'Change email'),
+  ('account.change_password', 'Change password'),
+] %}
+
+{% macro navigation(items) %}
+<div class="box">
+  <aside class="menu">
+    <ul class="menu-list">
+    {% for route, name in items %}
+      {% set href = url_for(route) %}
+      <li>
+        <a class="{% if request.endpoint == route %}is-active{% endif %}" href="{{ href }}">
+          {{ name }}
+        </a>
+      </li>
+    {% endfor %}
+    </ul>
+  {% if current_user.is_admin %}
+    <hr />
+    <ul class="menu-list">
+      <li><a href="{{ url_for('account.admin') }}">Manage users</a></li>
+    </ul>
+  {% endif %}
+  </aside>
+</div>
+{% endmacro %}
+
+{% macro user_info(user) %}
+<table class="table">
+  <tr><td><strong>Name</strong></td><td>{{ '%s' % (user.name) }}</td></tr>
+  <tr><td><strong>Email address</strong></td><td>{{ user.email }}</td></tr>
+</table>
+{% endmacro %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="title">Account</h1>
+    <p class="subtitle">Manage your account</p>
+    <div class="columns mt-2">
+      <div class="column is-one-third">
+        {{ navigation(endpoints) }}
+      </div>
+      <div class="column">
+        {% if form %}
+          {{ f.render_form(form) }}
+        {% else %}
+          {{ user_info(user) }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{{ check.password_check('new_password', 1) }}
+{% endblock %}

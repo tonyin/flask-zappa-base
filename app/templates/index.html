@@ -1,7 +1,21 @@
 {% extends 'base.html' %}
 
-{% block body %}
-
-Hello, World
-
+{% block nav %}{% include '_navbar.html' %}{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="title">Activity Feed</h1>
+    <article class="media">
+      <figure class="media-left"><span class="icon"><i class="fas fa-refresh"></i></span></figure>
+      <div class="media-content">
+        <div class="content">
+          <p>Model "regenerate-historical" was initiated by <strong>Tony</strong>.</p>
+        </div>
+      </div>
+      <div class="media-right">
+        <small class="is-italic">5 minutes ago</small>
+      </div>
+    </article>
+  </div>
+</section>
 {% endblock %}

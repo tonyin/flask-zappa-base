@@ -1,0 +1,29 @@
+{
+    "production": {
+        "app_function": "run.app",
+        "aws_region": "",
+        "profile_name": "default",
+        "project_name": "",
+        "runtime": "python3.6",
+        "s3_bucket": "",
+        "memory_size": 1024,
+        "timeout_seconds": 30,
+        "exclude": [
+            "config.env",
+            ".app/static",
+            "upload_assets.py"
+        ],
+        "vpc_config": {
+            "SubnetIds": []
+        },
+        "aws_environment_variables": {
+            "FLASK_ENV": "production",
+            "APP_NAME": "",
+            "FLASKS3_BUCKET_NAME": "",
+            "EMAIL_SENDER": "",
+            "MAIL_SERVER": "smtp.mailgun.org",
+            "MAIL_PORT": "587",
+            "MAIL_USE_TLS": "True"
+        }
+    }
+}

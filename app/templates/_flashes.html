@@ -1,0 +1,22 @@
+{% import 'macros/page_macros.html' as p %}
+
+{% macro render_flashes(class) %}
+  {% with msgs = get_flashed_messages(category_filter=[class]) %}
+    {% for msg in msgs %}
+      <div class="notification is-{{ class }}">
+        <button class="delete"></button>
+        {{ msg }}
+      </div>
+    {% endfor %}
+  {% endwith %}
+{% endmacro %}
+
+<div class="container">
+  <div class="flashes">
+    {{ render_flashes('danger') }}
+    {{ render_flashes('warning') }}
+    {{ render_flashes('info') }}
+    {{ render_flashes('success') }}
+  </div>
+  {{ p.handle_close('div.flashes', 'div.notification', 'button.delete') }}
+</div>

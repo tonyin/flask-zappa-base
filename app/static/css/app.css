@@ -1,0 +1,17 @@
+.mt-2 {
+  margin-top: 2rem;
+}
+.py-2 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.px-2 {
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+.p-1 {
+  padding: 1rem;
+}
+.w-100 {
+  width: 100%;
+}

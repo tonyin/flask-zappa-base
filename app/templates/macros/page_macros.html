@@ -1,0 +1,38 @@
+{% macro activate_modal(container, trigger, modal='') %}
+<script>
+  $('{{ container }}').find('{{ trigger }}').on('click', () => {
+    $('{{ container }}').find('.modal{{ modal }}')[0].classList.add('is-active')
+  })
+  $('{{ container }}').find("*[aria-label='Close']").on('click', () => {
+    $('{{ container }}').find('.modal{{ modal }}')[0].classList.remove('is-active')
+  })
+</script>
+{% endmacro %}
+
+{% macro handle_delete(container, entity, url) %}
+<script>
+  const $container = $('{{ container }}')
+  $container.on('click', 'button.is-danger', {container:'{{ entity }}'}, deleteElement)
+  function deleteElement(e) {
+    const id = $(this).parents(e.data.container).data('id')
+    const url = window.location.href.split(/[?#]/)[0] + '{{ url }}' + id
+    console.log(url)
+    $.ajax({
+      type: 'delete',
+      url: url,
+      data: {csrf_token: "{{ csrf_token() }}"}
+    })
+      .done((res) => window.location.replace(res))
+      .fail((res) => console.log('error'))
+  }
+</script>
+{% endmacro %}
+
+{% macro handle_close(container, element, trigger) %}
+<script>
+  const $con = $('{{ container }}')
+  $con.on('click', '{{ trigger }}', function() {
+    $(this).parents('{{ element }}').remove()
+  })
+</script>
+{% endmacro %}

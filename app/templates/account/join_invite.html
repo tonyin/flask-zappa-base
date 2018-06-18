@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-half is-offset-one-quarter has-background-white-ter py-2 px-2">
+        <h2 class="title has-text-center-centered">Create password</h2>
+        {{ f.render_form(form) }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ check.password_check('password', 1) }}
+{% endblock %}

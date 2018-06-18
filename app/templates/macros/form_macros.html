@@ -1,0 +1,121 @@
+{# Render a flask.ext.wtforms.Form object.
+   Parameters:
+        form          – The form to output.
+        method        – <form> method attribute (default 'POST')
+        extra_classes – The classes to add to the <form>.
+        enctype       – <form> enctype attribute. If None, will automatically be set to
+                        multipart/form-data if a FileField is present in the form. #}
+{% macro render_form(form, method='POST', extra_classes='', enctype=None) %}
+  {% set flashes = {
+    'danger':  get_flashed_messages(category_filter=['form-danger']),
+    'warning': get_flashed_messages(category_filter=['form-warning']),
+    'info':    get_flashed_messages(category_filter=['form-info']),
+    'success': get_flashed_messages(category_filter=['form-success'])
+  } %}
+
+  {{ begin_form(form, flashes, method=method, extra_classes=extra_classes, enctype=enctype) }}
+    {% for field in form if not (field.id == 'csrf_token' or field.type == 'SubmitField') %}
+      {{ render_form_field(field) }}
+    {% endfor %}
+
+    {{ form_message(flashes['danger'], header='Something went wrong.', class='danger') }}
+    {{ form_message(flashes['warning'], header='Check your email.', class='warning') }}
+    {{ form_message(flashes['info'], header='Information', class='info') }}
+    {{ form_message(flashes['success'], header='Success!', class='success') }}
+
+    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
+      {{ render_form_field(field) }}
+    {% endfor %}
+
+  {{ end_form(form) }}
+{% endmacro %}
+
+{# Set up the form, including hidden fields and error states #}
+{% macro begin_form(form, flashes, method='POST', extra_classes='', enctype=None, action='') %}
+  {# Set proper enctype #}
+  {% if enctype is none and (form | selectattr('type', 'equalto', 'FileField') | list | length > 0) %}
+    {% set enctype = 'multipart/form-data' %}
+  {% else %}
+    {% set enctype = '' %}
+  {% endif %}
+
+  <form action="{{ action }}" method="{{ method }}" enctype="{{ enctype }}" class="{{ extra_classes }}">
+  {{ form.hidden_tag() }}
+{% endmacro %}
+
+{# Mirrors begin_form #}
+{% macro end_form(form) %}
+    </form>
+{% endmacro %}
+
+{# Render a message for the form #}
+{% macro form_message(messages, header=none, class='') %}
+  {% if messages %}
+    <div class="notification is-{{ class }}">
+      {% if header is not none %}
+        <h6>{{ header }}</h6>
+      {% endif %}
+      {% if messages %}
+        <div class="content">
+          <ul>
+            {% for message in messages %}
+              <li>{{ message | safe }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{# Render a field for the form #}
+{% macro render_form_field(field, extra_classes='', label=True) %}
+  <div class="field {{ extra_classes }}">
+    {{ render_form_input(field, label) }}
+    {% if field.errors %}
+      <p class="help is-danger">
+        {{ field.errors[0] | safe }}
+      </p>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro render_form_input(field, label=True) %}
+  {% if field.widget.input_type == 'checkbox' %}
+    <div class="control">
+      <label class="checkbox">
+        {{ field }}
+        {{ field.label.text }}
+      </label>
+    </div>
+  {% elif field.type == 'RadioField' %}
+    {{ field.label(class_="form-label") }}
+    {% for item in field %}
+      <label class="form-radio">  
+        {{ item }}
+        <i class="form-icon"></i> {{ item.label.text|capitalize }}
+      </label>
+    {% endfor %}
+  {% elif field.type == 'SubmitField' %}
+    <div class="control">
+      {{ field(class='button is-link') }}
+    </div>
+  {% elif field.type == 'FormField' %}
+    {{ render_form(field) }}
+  {% else %}
+    {% if label %}
+      {{ field.label(class_="label") }}
+    {% endif %}
+    {% if field.type == 'SelectMultipleField' or field.type == 'SelectField' %}
+      <div class="control">
+        <div class="select">
+          {{ field }}
+        </div>
+      </div>
+    {% else %}
+      <div class="control">
+        {{ field(class_="input", placeholder=field.description) }}
+      </div>
+    {% endif %}
+  {% endif %}
+{% endmacro %}

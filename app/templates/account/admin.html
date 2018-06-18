@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% import 'macros/page_macros.html' as p %}
+
+{% block page_title %}Admin | {% endblock %}
+{% block nav %}{% include '_navbar.html' %}{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="{{ url_for('account.manage') }}">Account</a></li>
+        <li class="is-active" aria-current="page"><a href="#">Admin</a></li>
+      </ul>
+    </nav>
+    <h1 class="title">Admin</h1>
+    <p class="subtitle">Manage users and invite new ones</p>
+    <a class="button is-link" href="{{ url_for('account.user_invite') }}">
+      <span class="icon"><i class="fas fa-plus"></i></span><span>Invite new user</span>
+    </a>
+    {% if users %}
+    <table id="users" class="table is-fullwidth is-hoverable mt-2">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Confirmed?</th>
+          <th>Admin?</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr data-id="{{ user.id }}">
+          <td>{{ user.name|safe }}</td>
+          <td>{{ user.email|safe }}</td>
+          <td><span class="icon is-medium has-text-{% if user.confirmed %}success{% else %}danger{% endif %}"><i class="fas fa-{% if user.confirmed %}check{% else %}times{% endif %}"></i></span></td>
+          <td><span class="icon is-medium has-text-{% if user.is_admin %}success{% else %}danger{% endif %}"><i class="fas fa-{% if user.is_admin %}check{% else %}times{% endif %}"></i></span></td>
+          <td id="delete-user{{ user.id }}" class="has-text-right">
+            <a class="button"><span class="icon is-medium has-text-danger"><i class="fas fa-trash"></i></span></a>
+            <div class="modal">
+              <div class="modal-background" aria-label="Close"></div>
+              <div class="modal-card has-text-left">
+                <header class="modal-card-head">
+                  <p class="modal-card-title">Delete user?</p>
+                  <button class="delete" aria-label="Close"></button>
+                </header>
+                <footer class="modal-card-foot">
+                  <button class="button is-danger">Delete</button>
+                  <button class="button" aria-label="Close">Cancel</button>
+                </footer>
+              </div>
+            </div>
+            {{ p.activate_modal('#delete-user' + user.id|string, 'span.icon') }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {{ p.handle_delete('#users', 'tr', '/user/') }}
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

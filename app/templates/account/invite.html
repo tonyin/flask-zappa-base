@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% import 'macros/form_macros.html' as f %}
+
+{% block page_title %}Invite user | {% endblock %}
+{% block nav %}{% include '_navbar.html' %}{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="{{ url_for('account.manage') }}">Account</a></li>
+        <li><a href="{{ url_for('account.admin') }}">Admin</a></li>
+        <li class="is-active" aria-current="page"><a href="#">Invite</a></li>
+      </ul>
+    </nav>
+    <div class="columns mt-2">
+      <div class="column is-half is-offset-one-quarter has-background-white-ter py-2 px-2">
+        <h2 class="title has-text-center-centered">Invite user</h2>
+        {% set flashes = {
+          'danger':  get_flashed_messages(category_filter=['form-danger']),
+          'warning': get_flashed_messages(category_filter=['form-check-email']),
+          'info':    get_flashed_messages(category_filter=['form-info']),
+          'success': get_flashed_messages(category_filter=['form-success'])
+        } %}
+        {{ f.begin_form(form, flashes) }}
+          {{ f.render_form_field(form.name) }}
+          {{ f.render_form_field(form.email) }}
+          {{ f.form_message(flashes['danger'], header='Something went wrong.', class='danger') }}
+          {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+          {{ f.form_message(flashes['info'], header='Information', class='info') }}
+          {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+          {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
+            {{ f.render_form_field(field, extra_classes='form-group mt-2 pt-2') }}
+          {% endfor %}
+        {{ f.end_form(form) }}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

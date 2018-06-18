@@ -1,0 +1,19 @@
+<nav class="navbar is-spaced has-shadow is-transparent">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item has-text-weight-semibold" href="{{ url_for('main.index') }}"></a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="{{ url_for('main.index') }}">Item 1</a>
+      </div>
+      <div class="navbar-end">
+      {% if current_user.is_authenticated %}
+        <a class="navbar-item" href="{{ url_for('account.manage') }}">Account</a>
+        <hr class="navbar-divider">
+        <a class="navbar-item" href="{{ url_for('account.logout') }}">Log out</a>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
