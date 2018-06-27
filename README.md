@@ -21,9 +21,19 @@ Base code for a new python flask web app
 3. Create a config.env with required values (see config.py): `touch config.env`
 4. Run: `./run.py`
 
+## Configuration
+
+### Environments
+
+We use two environments: `development` and `production`, where the former is for local development and the latter is what zappa will deploy on AWS.
+
 ## Deployment
 
-TODO
+### AWS
+
+1. Create a new AWS user to get security credentials. For permissions, attach Lambda, API Gateway, and RDS policies.
+2. Create a public S3 bucket for your app to use for static assets
+3. Create a PostgreSQL db. Your `DATABASE_URL` will be in the form `postgresql://user:pass@endpoint.rds.amazonaws.com/dbname`. If you plan to access the db remotely, use a dedicated security group and whitelist the IPs that you will use
 
 ### Static Assets
 
