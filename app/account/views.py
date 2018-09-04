@@ -6,10 +6,38 @@ from app.email import send_email
 from app.models import User, get_or_create
 from app.account.forms import (
     ChangeEmailForm, ChangePasswordForm, CreatePasswordForm, LoginForm,
-    RequestResetPasswordForm, ResetPasswordForm, InviteUserForm)
+    RequestResetPasswordForm, ResetPasswordForm, InviteUserForm, RegistrationForm)
 
 account = Blueprint('account', __name__)
 
+
+@account.route('/register', methods=['GET', 'POST'])
+def register():
+    """Register a new user, and send them a confirmation email."""
+    # Prefill email from landing page
+    if request.args.get('email'):
+        form = RegistrationForm(request.args)
+    else:
+        form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(
+            name=form.name.data,
+            email=form.email.data,
+            password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        token = user.generate_confirmation_token()
+        confirm_link = url_for('account.confirm', token=token, _external=True)
+        flash('A confirmation link has been sent to {}.'.format(user.email), 'warning')
+        send_email(
+            recipient=form.email.data,
+            subject='Confirm Your Account',
+            template='account/email/confirm',
+            user_name=form.name.data,
+            confirm_link=confirm_link
+        )
+        return redirect(url_for('main.index'))
+    return render_template('account/register.html', form=form)
 
 @account.route('/admin')
 @login_required

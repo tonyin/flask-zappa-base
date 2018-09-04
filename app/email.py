@@ -3,9 +3,7 @@ from flask import render_template
 from flask_mail import Message
 from zappa.async import task
 
-from app import create_app
-
-from . import mail
+from app import create_app, mail
 
 
 @task

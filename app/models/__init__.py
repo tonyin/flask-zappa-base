@@ -1,4 +1,4 @@
-from .. import db
+from app import db
 
 class TimestampMixin(object):
     created_at = db.Column(db.DateTime, default=db.func.now())

@@ -5,16 +5,16 @@
     <title>{% block page_title %}{% endblock %}{{ config.APP_NAME }}</title>
     {% block custom_head_tags %}{% endblock %}
   </head>
-  <body>
+  <body class="Site">
     <!--[if lte IE 9]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
     <![endif]-->
     {% block nav %}{% endblock %}
-    <main>
+    <main class="Site-content">
       {% include '_flashes.html' %}
       {% block content %}{% endblock %}
     </main>
-
+    {% block footer %}{% endblock %}
     {# Implement CSRF protection for site #}
     {% if csrf_token()|safe %}
       <div style="visibility: hidden; display: none">

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
-
+{% block page_title %}Welcome | {% endblock %}
 {% block nav %}{% include '_navbar.html' %}{% endblock %}
+
 {% block content %}
 <section class="section">
   <div class="container">
@@ -8,3 +9,5 @@
   </div>
 </section>
 {% endblock %}
+
+{% block footer %}{% include '_footer.html' %}{% endblock %}

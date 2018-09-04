@@ -1,10 +1,10 @@
-{% macro activate_modal(container, trigger, modal='') %}
+{% macro activate_modal(container, trigger) %}
 <script>
-  $('{{ container }}').find('{{ trigger }}').on('click', () => {
-    $('{{ container }}').find('.modal{{ modal }}')[0].classList.add('is-active')
+  $('{{ container }}').find('{{ trigger }}').on('click', function() {
+    $('.modal.'+$(this).attr('id')).toggleClass('is-active')
   })
-  $('{{ container }}').find("*[aria-label='Close']").on('click', () => {
-    $('{{ container }}').find('.modal{{ modal }}')[0].classList.remove('is-active')
+  $('{{ container }}').find("*[aria-label='close']").on('click', function() {
+    $('.modal').removeClass('is-active')
   })
 </script>
 {% endmacro %}
@@ -33,6 +33,21 @@
   const $con = $('{{ container }}')
   $con.on('click', '{{ trigger }}', function() {
     $(this).parents('{{ element }}').remove()
+  })
+</script>
+{% endmacro %}
+
+{% macro activate_dropdown(container) %}
+<script>
+  var $dropdown = $('{{ container }}').find('.dropdown')
+  var $trigger = $dropdown.find('.dropdown-trigger')
+  var $menu = $dropdown.find('.dropdown-menu')
+  $(document).on('click', () => {
+    $dropdown.removeClass('is-active')
+  })
+  $dropdown.on('click', $trigger, (e) => {
+    e.stopPropagation()
+    $dropdown.toggleClass('is-active')
   })
 </script>
 {% endmacro %}

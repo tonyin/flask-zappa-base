@@ -10,7 +10,6 @@ from flask_s3 import FlaskS3
 
 from config import config
 
-basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Extensions
 db = SQLAlchemy(metadata=MetaData())
