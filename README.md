@@ -1,6 +1,6 @@
-# flask-base
+# flask-zappa-base
 
-Base code for a new python flask web app
+Base code for python3, flask, zappa
 
 ## Stack
 
